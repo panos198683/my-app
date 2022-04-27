@@ -1,15 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 
-import TodoList from "./TodoList";
-
-class Form extends Component {
-  constructor(props) {
-    super(props);
-  }
-  inputHandler = (e) => {
-    this.props.setInputText(e.target.value);
+const Form = (props) => {
+  const inputHandler = (e) => {
+    props.setInputText(e.target.value);
   };
-  submitTodoHandler = (e) => {
+  const submitTodoHandler = (e) => {
     e.preventDefault();
     const inputCheck = document.getElementById("input--add");
     if (inputCheck.value == "") {
@@ -27,20 +22,20 @@ class Form extends Component {
       return;
     }
 
-    this.props.setTodos([
-      ...this.props.todos,
+    props.setTodos([
+      ...props.todos,
       {
-        title: this.props.inputText,
-        editinput: this.props.inputText,
+        title: props.inputText,
+        editinput: props.inputText,
         editMode: false,
         completed: false,
         id: Math.random() * 1000,
       },
     ]);
-    this.props.setInputText("");
+    props.setInputText("");
   };
 
-  submitApiHandler = (e) => {
+  const submitApiHandler = (e) => {
     e.preventDefault();
 
     fetch("https://jsonplaceholder.typicode.com/todos/")
@@ -48,41 +43,39 @@ class Form extends Component {
       .then((data) => {
         let apidata = data.slice(0, 10);
 
-        this.props.setTodos([...this.props.todos, ...apidata]);
+        props.setTodos([...props.todos, ...apidata]);
       });
   };
 
-  render() {
-    return (
-      <form className="todo-form">
-        <div className="input-field">
-          <input
-            value={this.props.inputText}
-            type="text"
-            id="input--add"
-            className="input "
-            onChange={this.inputHandler}
-            placeholder="e.g. Go to the gym"
-          />
-        </div>
-        <div className="buttonwr">
-          <input
-            type="submit"
-            id="todoBtn"
-            onClick={this.submitTodoHandler}
-            className="button button--add"
-            value="Add"
-          />
-          <button
-            onClick={this.submitApiHandler}
-            className="button button--add"
-            id="apiBtn"
-          >
-            Todos from API
-          </button>
-        </div>
-      </form>
-    );
-  }
-}
+  return (
+    <form className="todo-form">
+      <div className="input-field">
+        <input
+          value={props.inputText}
+          type="text"
+          id="input--add"
+          className="input "
+          onChange={inputHandler}
+          placeholder="e.g. Go to the gym"
+        />
+      </div>
+      <div className="buttonwr">
+        <input
+          type="submit"
+          id="todoBtn"
+          onClick={submitTodoHandler}
+          className="button button--add"
+          value="Add"
+        />
+        <button
+          onClick={submitApiHandler}
+          className="button button--add"
+          id="apiBtn"
+        >
+          Todos from API
+        </button>
+      </div>
+    </form>
+  );
+};
 export default Form;
