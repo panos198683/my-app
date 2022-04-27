@@ -1,27 +1,21 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-class TodoEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      editInput: this.props.todo.title,
-    };
-  }
-  deleteHandler = (e) => {
+const TodoEdit = (props) => {
+  const [editInput, setEditInput] = useState(props.todo.title);
+
+  const deleteHandler = (e) => {
     e.preventDefault();
-    // console.log(this.props.todos);
-    this.props.setTodos(
-      this.props.todos.filter((el) => el.id !== this.props.todo.id)
-    );
+    props.setTodos(props.todos.filter((el) => el.id !== props.todo.id));
   };
-  SaveHandler = (e) => {
+
+  const SaveHandler = (e) => {
     e.preventDefault();
-    this.props.setTodos(
-      this.props.todos.map((item) => {
-        if (item.id === this.props.todo.id) {
+    props.setTodos(
+      props.todos.map((item) => {
+        if (item.id === props.todo.id) {
           return {
             ...item,
-            title: this.state.editInput,
+            title: editInput,
             editMode: false,
           };
         }
@@ -30,12 +24,11 @@ class TodoEdit extends Component {
     );
   };
 
-  editHandler = (e) => {
+  const editHandler = (e) => {
     e.preventDefault();
-    // this.props.setEditInputText(this.props.todos.text);
-    this.props.setTodos(
-      this.props.todos.map((item) => {
-        if (item.id === this.props.todo.id) {
+    props.setTodos(
+      props.todos.map((item) => {
+        if (item.id === props.todo.id) {
           return {
             ...item,
             editMode: !item.editMode,
@@ -45,37 +38,27 @@ class TodoEdit extends Component {
       })
     );
   };
-  InputHandler = (e) => {
-    this.setState({ editInput: e.target.value });
+  const InputHandler = (e) => {
+    // this.setState({ editInput: e.target.value });
+    setEditInput(e.target.value);
   };
-  render() {
-    return (
-      <li
-        className={`todo-collection__item ${
-          this.props.todo.completed ? "completed" : ""
-        }`}
-      >
-        <input
-          onChange={this.InputHandler}
-          value={this.state.editInput}
-          className="newInput"
-        />
-        <i
-          className="button saveChange button--save"
-          onClick={this.SaveHandler}
-        >
-          save
-        </i>
-        <i
-          className="fas fa-trash button button--delete"
-          onClick={this.deleteHandler}
-        ></i>
-        <i
-          onClick={this.editHandler}
-          className="fas fa-edit button button--edit"
-        ></i>
-      </li>
-    );
-  }
-}
+
+  return (
+    <li
+      className={`todo-collection__item ${
+        props.todo.completed ? "completed" : ""
+      }`}
+    >
+      <input onChange={InputHandler} value={editInput} className="newInput" />
+      <i className="button saveChange button--save" onClick={SaveHandler}>
+        save
+      </i>
+      <i
+        className="fas fa-trash button button--delete"
+        onClick={deleteHandler}
+      ></i>
+      <i onClick={editHandler} className="fas fa-edit button button--edit"></i>
+    </li>
+  );
+};
 export default TodoEdit;

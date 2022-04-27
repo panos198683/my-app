@@ -1,27 +1,23 @@
-import React, { Component } from "react";
+import React from "react";
+import { useRef } from "react";
 
-class Todo extends Component {
-  constructor(props) {
-    super(props);
-    this.todoRef = React.createRef();
-  }
-  removeTodo = (e) => {
+const Todo = (props) => {
+  const todoRef = useRef();
+  const removeTodo = (e) => {
     e.preventDefault();
-    this.props.setTodos(
-      this.props.todos.filter((el) => el.id !== this.props.todo.id)
-    );
+    props.setTodos(props.todos.filter((el) => el.id !== props.todo.id));
   };
-  deleteHandler = (e) => {
+  const deleteHandler = (e) => {
     e.preventDefault();
-    const todoItem = this.todoRef.current;
+    const todoItem = todoRef.current;
     todoItem.classList.add("fall");
-    todoItem.addEventListener("transitionend", this.removeTodo);
+    todoItem.addEventListener("transitionend", removeTodo);
   };
-  completedHandler = (e) => {
+  const completedHandler = (e) => {
     e.preventDefault();
-    this.props.setTodos(
-      this.props.todos.map((item) => {
-        if (item.id === this.props.todo.id) {
+    props.setTodos(
+      props.todos.map((item) => {
+        if (item.id === props.todo.id) {
           return {
             ...item,
             completed: !item.completed,
@@ -31,11 +27,11 @@ class Todo extends Component {
       })
     );
   };
-  editHandler = (e) => {
+  const editHandler = (e) => {
     e.preventDefault();
-    this.props.setTodos(
-      this.props.todos.map((item) => {
-        if (item.id === this.props.todo.id) {
+    props.setTodos(
+      props.todos.map((item) => {
+        if (item.id === props.todo.id) {
           return {
             ...item,
             editMode: !item.editMode,
@@ -45,31 +41,30 @@ class Todo extends Component {
       })
     );
   };
-  render() {
-    return (
-      <li
-        ref={this.todoRef}
-        className={`todo-collection__item ${
-          this.props.todo.completed ? "completed" : ""
+
+  return (
+    <li
+      ref={todoRef}
+      className={`todo-collection__item ${
+        props.todo.completed ? "completed" : ""
+      }`}
+    >
+      {props.todo.title}{" "}
+      <i
+        className="fas fa-check button button--save"
+        onClick={completedHandler}
+      ></i>
+      <i
+        className="fas fa-trash button button--delete"
+        onClick={deleteHandler}
+      ></i>
+      <i
+        onClick={editHandler}
+        className={`fas fa-edit button button--edit ${
+          props.todo.completed ? "hidden" : ""
         }`}
-      >
-        {this.props.todo.title}{" "}
-        <i
-          className="fas fa-check button button--save"
-          onClick={this.completedHandler}
-        ></i>
-        <i
-          className="fas fa-trash button button--delete"
-          onClick={this.deleteHandler}
-        ></i>
-        <i
-          onClick={this.editHandler}
-          className={`fas fa-edit button button--edit ${
-            this.props.todo.completed ? "hidden" : ""
-          }`}
-        ></i>{" "}
-      </li>
-    );
-  }
-}
+      ></i>{" "}
+    </li>
+  );
+};
 export default Todo;
